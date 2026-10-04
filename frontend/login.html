@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>SAAI — S.A. Academic Artificial Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --wine: #991236;
+      --wine-dark: #7a0c29;
+      --wine-light: #fbf0f3;
+      --wine-border: #e8c5ce;
+      --text-main: #1f2937;
+      --text-muted: #6b7280;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #fbf0f3 0%, #f1f5f9 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: var(--text-main);
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 420px;
+      background: var(--card-bg);
+      border-radius: 20px;
+      box-shadow: 0 15px 35px -5px rgba(153, 18, 54, 0.1), 0 8px 16px -6px rgba(0, 0, 0, 0.05);
+      border: 1px solid #f1e2e6;
+      overflow: hidden;
+      animation: fadeIn 0.35s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-header {
+      background: linear-gradient(135deg, var(--wine) 0%, var(--wine-dark) 100%);
+      padding: 32px 28px 26px;
+      text-align: center;
+      color: #ffffff;
+      position: relative;
+    }
+
+    .college-badge {
+      width: 58px;
+      height: 54px;
+      background: #ffffff;
+      color: var(--wine);
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+      font-weight: 800;
+      margin: 0 auto 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      letter-spacing: -0.3px;
+    }
+
+    .login-header h1 {
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      margin-bottom: 4px;
+    }
+
+    .login-header p {
+      font-size: 13px;
+      color: #fed7e2;
+      font-weight: 500;
+    }
+
+    .login-body {
+      padding: 28px;
+    }
+
+    .alert-box {
+      display: none;
+      padding: 11px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 18px;
+      line-height: 1.4;
+    }
+
+    .alert-error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #f87171;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 6px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 14.5px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      color: var(--text-main);
+      background: #fff;
+    }
+
+    .input-wrapper input:focus {
+      border-color: var(--wine);
+      box-shadow: 0 0 0 3px rgba(153, 18, 54, 0.12);
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 13px;
+      background: var(--wine);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 22px;
+    }
+
+    .btn-login:hover {
+      background: var(--wine-dark);
+    }
+
+    .btn-login:active {
+      transform: scale(0.98);
+    }
+
+    .btn-login:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Spinner */
+    .spinner {
+      display: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <div class="login-header">
+      <div class="college-badge">SAAI</div>
+      <h1>SAAI</h1>
+      <p>S.A. Academic Artificial Intelligence</p>
+    </div>
+
+    <div class="login-body">
+      <div class="alert-box alert-error" id="errorAlert"></div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="username">Register Number / Username</label>
+          <div class="input-wrapper">
+            <input 
+              type="text" 
+              id="username" 
+              placeholder="e.g. 222311669 or admin" 
+              required 
+              autocomplete="username" 
+              autofocus
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-wrapper">
+            <input 
+              type="password" 
+              id="password" 
+              value="123456" 
+              placeholder="123456" 
+              required 
+              autocomplete="current-password" 
+            />
+          </div>
+        </div>
+
+        <button type="submit" class="btn-login" id="loginBtn">
+          <span class="spinner" id="btnSpinner"></span>
+          <span id="btnText">Sign In to SAAI</span>
+        </button>
+      </form>
+
+      <div class="footer-note">
+        Protected with Zero-Trust Session Authentication<br>
+        <span style="margin-top: 6px; display: inline-block;">Designed & Developed by <a href="https://vibe2code.in/" target="_blank" rel="noopener noreferrer" style="color: var(--primary, #800020); font-weight: 600; text-decoration: none;">VIBE2CODE</a></span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = window.location.origin;
+    const loginForm = document.getElementById('loginForm');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const loginBtn = document.getElementById('loginBtn');
+    const btnSpinner = document.getElementById('btnSpinner');
+    const btnText = document.getElementById('btnText');
+    const errorAlert = document.getElementById('errorAlert');
+
+    // If already logged in, redirect to chat
+    if (localStorage.getItem('sacas_jwt_token')) {
+      window.location.href = '/chat';
+    }
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value.trim() || '123456';
+
+      if (!username) {
+        errorAlert.textContent = 'Please enter your Register Number or Username.';
+        errorAlert.style.display = 'block';
+        return;
+      }
+
+      errorAlert.style.display = 'none';
+      loginBtn.disabled = true;
+      btnSpinner.style.display = 'inline-block';
+      btnText.textContent = 'Verifying with Database...';
+
+      try {
+        const response = await fetch(`${API_BASE}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.detail || 'Student record not found in database or incorrect password.');
+        }
+
+        // Save session credentials
+        localStorage.setItem('sacas_jwt_token', data.access_token);
+        localStorage.setItem('sacas_user', JSON.stringify(data));
+
+        // Immediately redirect to chat interface
+        window.location.href = '/chat';
+
+      } catch (err) {
+        errorAlert.textContent = err.message || 'Authentication error. Please check your Register Number.';
+        errorAlert.style.display = 'block';
+        loginBtn.disabled = false;
+        btnSpinner.style.display = 'none';
+        btnText.textContent = 'Sign In to Assistant';
+      }
+    });
+  </script>
+</body>
+</html>

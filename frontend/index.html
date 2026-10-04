@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SAAI — S.A. Academic Artificial Intelligence</title>
+  <script>
+    if (localStorage.getItem('sacas_jwt_token')) {
+      window.location.href = '/chat';
+    } else {
+      window.location.href = '/login';
+    }
+  </script>
+</head>
+<body>
+  <p style="font-family: sans-serif; text-align: center; margin-top: 50px; color: #6b7280;">Loading SAAI...</p>
+</body>
+</html>

@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" />
+    <title>SAAI — S.A. Academic Artificial Intelligence</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+        color: #29292d;
+        background: #fff;
+        font-synthesis: none;
+        --wine: #991236;
+        --wine-dark: #85102e;
+        --wine-light: #fbf0f3;
+        --line: #e8e6e2;
+        --muted: #858589;
+        --soft: #f6f4f0;
+      }
+
+      * { box-sizing: border-box; }
+      
+      html, body {
+        height: 100%;
+        margin: 0;
+        background: #fff;
+      }
+
+      body {
+        min-width: 320px;
+        display: flex;
+      }
+
+      button, input, select { font: inherit; }
+      button { cursor: pointer; }
+
+      .app-shell {
+        width: 100vw;
+        height: 100dvh;
+        margin: 0;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .site-header {
+        height: 75px;
+        flex: 0 0 75px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 28px;
+        border-bottom: 1px solid var(--line);
+        background: #fff;
+        z-index: 10;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .brand-badge {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: var(--wine);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: -0.3px;
+      }
+
+      .brand-title {
+        color: var(--wine);
+        font-size: 17px;
+        font-weight: 800;
+        line-height: 1.1;
+      }
+
+      .brand-subtitle {
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 500;
+      }
+
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .user-pill {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 14px;
+        border: 1px solid #e7e5e1;
+        border-radius: 20px;
+        background: var(--soft);
+        font-size: 13px;
+        font-weight: 600;
+        color: #374151;
+      }
+
+      .user-avatar-circle {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--wine);
+        color: #fff;
+        display: grid;
+        place-items: center;
+        font-size: 11px;
+        font-weight: 700;
+      }
+
+      .btn-header {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border: 1px solid #e7e5e1;
+        border-radius: 10px;
+        background: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.15s ease;
+      }
+
+      .btn-new-chat {
+        color: var(--wine);
+      }
+
+      .btn-new-chat:hover {
+        background: var(--wine-light);
+        border-color: #d2aeb8;
+      }
+
+      .btn-logout {
+        color: #dc2626;
+      }
+
+      .btn-logout:hover {
+        background: #fef2f2;
+        border-color: #fca5a5;
+      }
+
+      .chat-card {
+        min-height: 0;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: #fff;
+      }
+
+      .conversation {
+        flex: 1;
+        min-height: 0;
+        padding: 24px 32px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .date-chip {
+        width: max-content;
+        margin: 0 auto 20px;
+        padding: 6px 14px;
+        border-radius: 20px;
+        background: #f5f3f0;
+        color: #858589;
+        font-size: 11px;
+        letter-spacing: .5px;
+        font-weight: 600;
+      }
+
+      /* Quick Suggestion Chips */
+      .chips-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 16px 0 24px;
+        justify-content: center;
+      }
+
+      .suggestion-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border: 1px solid #e2ddd7;
+        border-radius: 20px;
+        background: #ffffff;
+        color: #4b5563;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .suggestion-chip:hover {
+        border-color: var(--wine);
+        color: var(--wine);
+        background: #fff8f9;
+        transform: translateY(-1px);
+      }
+
+      .message-row {
+        display: flex;
+        gap: 12px;
+        margin-bottom: 22px;
+        animation: fadeIn 0.2s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(6px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .bot-avatar.mini {
+        width: 36px;
+        height: 36px;
+        flex: 0 0 36px;
+        border-radius: 10px;
+        align-self: flex-start;
+        display: grid;
+        place-items: center;
+        color: #fff;
+        background: var(--wine);
+        font-size: 12px;
+        font-weight: 700;
+        user-select: none;
+      }
+
+      .message-content {
+        max-width: min(85%, 780px);
+        display: flex;
+        flex-direction: column;
+      }
+
+      .bubble {
+        padding: 14px 18px;
+        font-size: 15px;
+        line-height: 1.55;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+      }
+
+      .bot-bubble {
+        background: #f6f4f0;
+        color: #29292d;
+        border-radius: 4px 18px 18px 18px;
+      }
+
+      .user-bubble {
+        color: #fff;
+        background: var(--wine);
+        border: 1px solid var(--wine-dark);
+        border-radius: 18px 4px 18px 18px;
+      }
+
+      .outgoing {
+        justify-content: flex-end;
+      }
+
+      .outgoing .message-content {
+        align-items: flex-end;
+      }
+
+      .message-meta {
+        margin: 6px 4px 0;
+        color: #858589;
+        font-size: 11px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .tool-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 8px;
+        background: #eef2ff;
+        color: #4338ca;
+        border: 1px solid #c7d2fe;
+        border-radius: 12px;
+        font-size: 10.5px;
+        font-weight: 600;
+      }
+
+      /* Bot Markdown Styling */
+      .bot-bubble h3 {
+        margin: 12px 0 6px 0;
+        font-size: 15px;
+        color: var(--wine);
+      }
+
+      .bot-bubble p {
+        margin: 0 0 10px 0;
+      }
+
+      .bot-bubble p:last-child {
+        margin-bottom: 0;
+      }
+
+      .bot-bubble ul, .bot-bubble ol {
+        margin: 6px 0 10px 20px;
+        padding: 0;
+      }
+
+      .bot-bubble li {
+        margin-bottom: 4px;
+      }
+
+      .bot-bubble table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 12px 0 14px 0;
+        font-size: 13.5px;
+        background: #fff;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #e5e7eb;
+      }
+
+      .bot-bubble th, .bot-bubble td {
+        padding: 8px 12px;
+        text-align: left;
+        border-bottom: 1px solid #f3f4f6;
+      }
+
+      .bot-bubble th {
+        background: #fdf5f7;
+        color: var(--wine);
+        font-weight: 700;
+      }
+
+      .bot-bubble a {
+        color: var(--wine);
+        text-decoration: underline;
+        font-weight: 600;
+      }
+
+      .typing-indicator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 16px 48px;
+        color: #858589;
+        font-size: 13px;
+      }
+
+      .typing-indicator.hidden {
+        display: none;
+      }
+
+      .typing-indicator span {
+        display: flex;
+        gap: 4px;
+      }
+
+      .typing-indicator i {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #b0ada8;
+        animation: pulse 1.4s infinite ease-in-out;
+      }
+
+      .typing-indicator i:nth-child(2) { animation-delay: .2s; }
+      .typing-indicator i:nth-child(3) { animation-delay: .4s; }
+
+      @keyframes pulse {
+        0%, 80%, 100% { opacity: 0.3; transform: scale(0.85); }
+        40% { opacity: 1; transform: scale(1.1); }
+      }
+
+      .composer-area {
+        flex: 0 0 auto;
+        padding: 16px 32px calc(14px + env(safe-area-inset-bottom, 0px));
+        border-top: 1px solid var(--line);
+        background: #fbfaf8;
+      }
+
+      .message-form {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 6px 8px 6px 16px;
+        border: 1px solid #dfd9d3;
+        border-radius: 28px;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(0,0,0,.03);
+      }
+
+      .message-form:focus-within {
+        border-color: var(--wine);
+        box-shadow: 0 0 0 3px rgba(153, 18, 54, 0.12);
+      }
+
+      .message-form input {
+        flex: 1;
+        min-width: 0;
+        padding: 10px 0;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        color: #29292d;
+        font-size: 15px;
+      }
+
+      .send-button {
+        width: 44px;
+        height: 44px;
+        flex: 0 0 44px;
+        display: grid;
+        place-items: center;
+        border: 0;
+        border-radius: 50%;
+        color: #fff;
+        background: var(--wine);
+        transition: background .15s, transform .1s;
+      }
+
+      .send-button:hover { background: var(--wine-dark); }
+      .send-button:active { transform: scale(.95); }
+      .send-button:disabled { background: #d1c7c9; cursor: not-allowed; }
+
+      .send-button svg {
+        width: 20px;
+        height: 20px;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        margin-left: 2px;
+      }
+
+      .disclaimer {
+        margin: 10px 0 2px;
+        color: #9c9892;
+        text-align: center;
+        font-size: 11px;
+      }
+
+      .footer-credit {
+        margin: 4px 0 0;
+        color: #858589;
+        text-align: center;
+        font-size: 11px;
+      }
+
+      .footer-credit a {
+        color: var(--wine, #800020);
+        text-decoration: none;
+        font-weight: 600;
+        transition: opacity 0.2s ease;
+      }
+
+      .footer-credit a:hover {
+        text-decoration: underline;
+        opacity: 0.85;
+      }
+
+      /* Responsive */
+      @media (min-width: 900px) {
+        .conversation {
+          padding: 32px clamp(32px, 8vw, 160px) 24px;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .site-header {
+          height: 62px;
+          flex-basis: 62px;
+          padding: 0 14px;
+        }
+        .brand-subtitle, .btn-text-hide {
+          display: none;
+        }
+        .conversation {
+          padding: 16px 14px;
+        }
+        .composer-area {
+          padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="site-header">
+        <a class="brand" href="/chat" aria-label="SAAI Home">
+          <div class="brand-badge">SAAI</div>
+          <div>
+            <div class="brand-title">SAAI</div>
+            <div class="brand-subtitle">S.A. Academic Artificial Intelligence</div>
+          </div>
+        </a>
+        <div class="header-actions">
+          <div class="user-pill" id="userPill">
+            <div class="user-avatar-circle" id="userAvatarChar">S</div>
+            <span id="userNameLabel">Student</span>
+          </div>
+          <button class="btn-header btn-new-chat" id="newChatButton" type="button" title="Start a fresh chat">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+            <span class="btn-text-hide">New Chat</span>
+          </button>
+          <button class="btn-header btn-logout" id="logoutButton" type="button" title="Log out">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <span class="btn-text-hide">Sign Out</span>
+          </button>
+        </div>
+      </header>
+
+      <main class="chat-card">
+        <section class="conversation" id="conversation" aria-label="Chat conversation" aria-live="polite">
+          <div class="date-chip" id="dateChip">TODAY</div>
+
+          <article class="message-row incoming">
+            <div class="bot-avatar mini" aria-hidden="true">SAAI</div>
+            <div class="message-content">
+              <div class="bubble bot-bubble" id="welcomeMsg">
+                Hello! 👋 I am <strong>SAAI</strong> (S.A. Academic Artificial Intelligence).<br>
+                I can securely retrieve your verified academic marks, create personalized study plans, and answer queries regarding faculty, departments, clubs, and college events.
+              </div>
+              <div class="message-meta">SAAI <span>·</span> <span class="time-stamp">Now</span></div>
+            </div>
+          </article>
+
+          <div class="typing-indicator hidden" id="typingIndicator" aria-hidden="true">
+            <span><i></i><i></i><i></i></span> SAAI is generating your answer...
+          </div>
+        </section>
+
+        <footer class="composer-area">
+          <form class="message-form" id="messageForm">
+            <input id="messageInput" type="text" placeholder="Message SAAI (e.g. 'Show my marks and make a study plan')..." autocomplete="off" />
+            <button class="send-button" id="sendButton" type="submit" aria-label="Send message">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 20 18-8L3 4l2 7 10 1-10 1-2 7Z" /></svg>
+            </button>
+          </form>
+          <p class="disclaimer">SAAI operates with Zero-Trust Session Security. Answers are grounded in verified college database records.</p>
+          <p class="footer-credit">Designed & Developed by <a href="https://vibe2code.in/" target="_blank" rel="noopener noreferrer">VIBE2CODE</a></p>
+        </footer>
+      </main>
+    </div>
+
+    <script>
+      const API_BASE = window.location.origin;
+
+      // Check authentication immediately
+      const authToken = localStorage.getItem('sacas_jwt_token');
+      const currentUser = JSON.parse(localStorage.getItem('sacas_user') || 'null');
+
+      if (!authToken || !currentUser) {
+        // Not logged in -> Redirect to separate login page
+        window.location.href = '/login';
+      }
+
+      let chatHistory = [];
+
+      const conversation = document.getElementById('conversation');
+      const messageForm = document.getElementById('messageForm');
+      const messageInput = document.getElementById('messageInput');
+      const sendButton = document.getElementById('sendButton');
+      const newChatButton = document.getElementById('newChatButton');
+      const logoutButton = document.getElementById('logoutButton');
+      const typingIndicator = document.getElementById('typingIndicator');
+      const userNameLabel = document.getElementById('userNameLabel');
+      const userAvatarChar = document.getElementById('userAvatarChar');
+
+      // Populate user info in header
+      if (currentUser) {
+        userNameLabel.textContent = `${currentUser.full_name} (${currentUser.register_number || currentUser.role})`;
+        userAvatarChar.textContent = currentUser.full_name.charAt(0).toUpperCase();
+        document.getElementById('welcomeMsg').innerHTML = `
+          Hello <strong>${currentUser.full_name}</strong>! 👋 I am <strong>SAAI</strong> (S.A. Academic Artificial Intelligence).<br>
+          Your session is authenticated (Reg: <strong>${currentUser.register_number || currentUser.username}</strong>). How can I assist you with your marks, study plans, or college info today?
+        `;
+      }
+
+      function formatCurrentTime() {
+        const d = new Date();
+        return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      }
+
+      function scrollToBottom() {
+        conversation.scrollTo({
+          top: conversation.scrollHeight,
+          behavior: 'smooth'
+        });
+      }
+
+      // Lightweight Markdown Parser
+      function parseMarkdown(md) {
+        if (!md) return '';
+        let html = md;
+        html = html.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+        // Tables
+        html = html.replace(/^\|(.+)\|$/gm, function(match, row) {
+          const cells = row.split('|').map(c => c.trim());
+          if (cells.every(c => /^:?-+:?$/.test(c))) {
+            return '<tr-divider>';
+          }
+          return '<tr>' + cells.map(c => `<td>${c}</td>`).join('') + '</tr>';
+        });
+
+        if (html.includes('<tr>')) {
+          html = html.replace(/(<tr>[\s\S]*?<\/tr>)/g, function(tableContent) {
+            tableContent = tableContent.replace(/<tr-divider>\n?/g, '');
+            tableContent = tableContent.replace(/<tr>(.*?)<\/tr>/, function(m, firstRow) {
+              return '<tr>' + firstRow.replace(/<td>/g, '<th>').replace(/<\/td>/g, '</th>') + '</tr>';
+            });
+            return `<table>${tableContent}</table>`;
+          });
+        }
+
+        // Headers
+        html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+        html = html.replace(/^## (.*$)/gim, '<h3>$1</h3>');
+        html = html.replace(/^# (.*$)/gim, '<h3>$1</h3>');
+
+        // Bold & Italic
+        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+        // Links
+        html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1 ↗</a>');
+
+        // Lists
+        html = html.replace(/^\- (.*$)/gim, '<li>$1</li>');
+        html = html.replace(/(<li>.*<\/li>)/gims, '<ul>$1</ul>');
+        html = html.replace(/<\/ul>\s*<ul>/g, '');
+
+        // Paragraphs
+        html = html.split('\n\n').map(para => {
+          if (para.startsWith('<table') || para.startsWith('<h3') || para.startsWith('<ul') || para.startsWith('<li')) {
+            return para;
+          }
+          return `<p>${para.replace(/\n/g, '<br>')}</p>`;
+        }).join('');
+
+        return html;
+      }
+
+      function addMessage(content, type, toolInfo = null) {
+        const row = document.createElement('article');
+        row.className = `message-row ${type === 'user' ? 'outgoing' : 'incoming'}`;
+
+        if (type !== 'user') {
+          const avatar = document.createElement('div');
+          avatar.className = 'bot-avatar mini';
+          avatar.setAttribute('aria-hidden', 'true');
+          avatar.textContent = 'SA';
+          row.appendChild(avatar);
+        }
+
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'message-content';
+
+        const bubble = document.createElement('div');
+        bubble.className = `bubble ${type === 'user' ? 'user-bubble' : 'bot-bubble'}`;
+
+        if (type === 'user') {
+          bubble.textContent = content;
+        } else {
+          bubble.innerHTML = parseMarkdown(content);
+        }
+
+        const meta = document.createElement('div');
+        meta.className = 'message-meta';
+        meta.innerHTML = `${type === 'user' ? 'You' : 'SAAI'} <span>·</span> ${formatCurrentTime()}`;
+
+        contentDiv.append(bubble, meta);
+        row.appendChild(contentDiv);
+
+        conversation.insertBefore(row, typingIndicator);
+        scrollToBottom();
+      }
+
+      async function sendUserMessage(text) {
+        const message = text.trim();
+        if (!message) return;
+
+        addMessage(message, 'user');
+        messageInput.value = '';
+        sendButton.disabled = true;
+
+        typingIndicator.classList.remove('hidden');
+        scrollToBottom();
+
+        try {
+          const response = await fetch(`${API_BASE}/api/chat/stream`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${authToken}`
+            },
+            body: JSON.stringify({
+              message: message,
+              history: chatHistory
+            })
+          });
+
+          if (response.status === 401) {
+            typingIndicator.classList.add('hidden');
+            sendButton.disabled = false;
+            localStorage.removeItem('sacas_jwt_token');
+            localStorage.removeItem('sacas_user');
+            alert('Your session has expired. Please sign in again.');
+            window.location.href = '/login';
+            return;
+          }
+
+          if (!response.ok) {
+            typingIndicator.classList.add('hidden');
+            sendButton.disabled = false;
+            const errData = await response.json().catch(() => ({}));
+            addMessage(`⚠️ Error: ${errData.detail || 'Could not communicate with assistant backend.'}`, 'bot');
+            return;
+          }
+
+          // Real-Time Token Streaming
+          const reader = response.body.getReader();
+          const decoder = new TextDecoder('utf-8');
+          let accumulatedResponse = '';
+          let botBubble = null;
+          let buffer = '';
+
+          while (true) {
+            const { value, done } = await reader.read();
+            if (done) break;
+
+            buffer += decoder.decode(value, { stream: true });
+            const lines = buffer.split('\n');
+            buffer = lines.pop(); // Keep partial line in buffer
+
+            for (const line of lines) {
+              const trimmed = line.trim();
+              if (trimmed.startsWith('data: ')) {
+                const dataStr = trimmed.slice(6).trim();
+                if (dataStr === '[DONE]') continue;
+
+                try {
+                  const parsed = JSON.parse(dataStr);
+                  const token = parsed.token || '';
+                  if (token) {
+                    accumulatedResponse += token;
+
+                    // First token arrived -> create message bubble and hide typing indicator
+                    if (!botBubble) {
+                      typingIndicator.classList.add('hidden');
+                      const row = document.createElement('article');
+                      row.className = 'message-row incoming';
+
+                      const avatar = document.createElement('div');
+                      avatar.className = 'bot-avatar mini';
+                      avatar.setAttribute('aria-hidden', 'true');
+                      avatar.textContent = 'SAAI';
+                      row.appendChild(avatar);
+
+                      const contentDiv = document.createElement('div');
+                      contentDiv.className = 'message-content';
+
+                      botBubble = document.createElement('div');
+                      botBubble.className = 'bubble bot-bubble';
+
+                      const meta = document.createElement('div');
+                      meta.className = 'message-meta';
+                      meta.innerHTML = `SAAI <span>·</span> ${formatCurrentTime()}`;
+
+                      contentDiv.append(botBubble, meta);
+                      row.appendChild(contentDiv);
+
+                      conversation.insertBefore(row, typingIndicator);
+                    }
+
+                    botBubble.innerHTML = parseMarkdown(accumulatedResponse);
+                    scrollToBottom();
+                  }
+                } catch (e) {
+                  // Skip any malformed chunk
+                }
+              }
+            }
+          }
+
+          typingIndicator.classList.add('hidden');
+          sendButton.disabled = false;
+
+          if (accumulatedResponse) {
+            chatHistory.push({ role: 'user', content: message });
+            chatHistory.push({ role: 'assistant', content: accumulatedResponse });
+            if (chatHistory.length > 10) chatHistory = chatHistory.slice(-10);
+          }
+
+        } catch (error) {
+          typingIndicator.classList.add('hidden');
+          sendButton.disabled = false;
+          addMessage(`⚠️ Network error: Could not reach the backend server at ${API_BASE}.`, 'bot');
+        }
+      }
+
+      // Submit Message
+      messageForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        sendUserMessage(messageInput.value);
+      });
+
+      // New Chat
+      newChatButton.addEventListener('click', () => {
+        chatHistory = [];
+        conversation.innerHTML = `
+          <div class="date-chip">TODAY, ${formatCurrentTime()}</div>
+          <article class="message-row incoming">
+            <div class="bot-avatar mini" aria-hidden="true">SAAI</div>
+            <div class="message-content">
+              <div class="bubble bot-bubble">
+                Hello <strong>${currentUser.full_name}</strong>! 👋 Fresh conversation started with SAAI. What would you like to know or check today?
+              </div>
+              <div class="message-meta">SAAI <span>·</span> ${formatCurrentTime()}</div>
+            </div>
+          </article>
+        `;
+        conversation.appendChild(typingIndicator);
+        typingIndicator.classList.add('hidden');
+        messageInput.value = '';
+        messageInput.focus();
+      });
+
+      // Sign Out
+      logoutButton.addEventListener('click', () => {
+        localStorage.removeItem('sacas_jwt_token');
+        localStorage.removeItem('sacas_user');
+        window.location.href = '/login';
+      });
+    </script>
+  </body>
+</html>
